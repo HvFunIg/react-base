@@ -1,9 +1,11 @@
-import React, {useState} from "react";
+import React, {useMemo,useState} from "react";
 import './styles/app.css'
 import PostList from "./components/PostList";
 
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
+import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
 
@@ -15,8 +17,22 @@ function App() {
 		{ id:4, title:"Aar", body:"Description" },
 	]);
 	
-	// Сортировка 
-	const [selectedSort,setSelectedSort] = useState("");
+	//Объект для сортировки и фильтрации 
+	const [filter,setFilter] = useState({sort:'',query:''});
+
+	// В константе лежат отсортированные массивы
+	// useMemo - кэширование. Вычисление будет только тогда, когда изменится что-то из зависимостей в []
+	const sortedPosts = useMemo(() => {
+		if (filter.sort) {
+			return  [...posts].sort((a,b)=>a[filter.sort].localeCompare(b[filter.sort]))
+		}
+		return posts
+	},[filter.sort,posts]) 
+
+	//Массив с результатом поиска
+	const sortedAndSearchedPosts = useMemo(()=>{
+		return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
+	},[filter.query,sortedPosts])
 
 	/**
 	 * Добавление поста
@@ -34,36 +50,16 @@ function App() {
 		setPosts(posts.filter (p => p.id !== post.id))
 	}
 
-	/**
-	 * Сортировка по алфавиту
-	 * @param {*} sort - поле, по которому будет сортировка
-	 */
-	const sortPosts = (sort) =>{
-		setSelectedSort(sort)
-		setPosts([...posts].sort((a,b)=>a[sort].localeCompare(b[sort])))
-		console.log(sort);
-	}
 
 	return (
 		<div className="App">
 			<PostForm create={createPost} />
-			<div>
-				<MySelect 
-					value={selectedSort}
-					onChange={sortPosts}
-					defaultValue="Сортировка"
-					options={[
-						{value:"title",name:"По названию"},
-						{value:"body",name:"По описанию"}
-					]}
-				/>
-			</div>	
-
-			{posts.length !==0
-				? <PostList remove={removePost}  posts={posts} title="Список постов про JS"/>
-				: <h1 style={{textAlign:"center"}}> Посты не найдены!</h1>
-			}
-			
+			<hr style={{margin:"10px 0"}}/>
+			<PostFilter 
+				filter={filter} 
+				setFilter={setFilter}
+			/>
+			<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
 		</div>
 	); 
 }
