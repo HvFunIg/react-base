@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./MyInput.module.css"
 
 /**
- * Инпут
+ * Инпут обычный (управляемый компонент)
  */
 const MyInput = (props) => {
   return (
@@ -10,6 +10,7 @@ const MyInput = (props) => {
     <input {...props} className={classes.myInput}></input>
   );
 }
+
 /**
  * Инпут с использованием useRef
  */

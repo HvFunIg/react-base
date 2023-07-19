@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, {useState} from "react";
 import './styles/app.css'
 import PostList from "./components/PostList";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
+
+import PostForm from "./components/PostForm";
 
 function App() {
 
@@ -11,38 +11,13 @@ function App() {
 		{ id:1, title:"JavaScript", body:"Description" },
 	]);
 	
-	//Данные из полей ввода
-	const [post,setPost] = useState({title:'',body:''})
-
-	/**
-	 * Создание поста
-	 */
-	const addNewPost = (e) =>{
-		e.preventDefault();
-
-		setPosts([...posts,{...post,id:Date.now()}]);		//id - для уникальности
-
-		//Очистка ввода
-		setPost({title:'',body:''});
+	const createPost = (newPost) =>{
+		setPosts([...posts, newPost])
 	}
 
 	return (
 		<div className="App">
-			<form action="">
-				{/* Управляемый компонент */}
-				<MyInput 
-					value={post.title}
-					onChange = {e=>{setPost({...post, title:e.target.value})}}
-					type="text" 
-					placeholder="Название поста"
-				/>
-				<MyInput 
-						value={post.body}
-						onChange = {e=>{setPost({...post, body:e.target.value})}}
-					type="text" 
-					placeholder="Описание поста"/>
-				<MyButton onClick={addNewPost}>Создать пост</MyButton>
-			</form>
+			<PostForm create={createPost}/>
 			<PostList posts={posts} title="Список постов про JS"/>
 		</div>
 	); 
