@@ -3,6 +3,8 @@
 
 Освежаю память с помощью [курса](https://www.youtube.com/watch?v=GNrdg3PzpJQ&t=902s&ab_channel=UlbiTV)
 
+Сторонние библиотеки:
+- React Transition Group для анимаций
 Используемые хуки:
 - useState
 - useRef (для неуправляемых/неконтролируемых компонентов)
