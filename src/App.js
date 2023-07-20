@@ -6,6 +6,8 @@ import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
 import MyInput from "./components/UI/input/MyInput";
 import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/modal/MyModal";
+import MyButton from "./components/UI/button/MyButton";
 
 function App() {
 
@@ -34,12 +36,15 @@ function App() {
 		return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
 	},[filter.query,sortedPosts])
 
+	// Видимость модального окна
+	const [modal,setModal] = useState(false);
 	/**
 	 * Добавление поста
 	 * @param {*} newPost 
 	 */
 	const createPost = (newPost) =>{
 		setPosts([...posts, newPost])
+		setModal(false)
 	}
 
 	/**
@@ -53,7 +58,16 @@ function App() {
 
 	return (
 		<div className="App">
-			<PostForm create={createPost} />
+			<MyButton style={{marginTop:"30px"}} onClick={()=>setModal(true)}>
+				Создать пост
+			</MyButton>
+			<MyModal 
+				visible={modal}	
+				setVisible={setModal}
+			>
+				<PostForm create={createPost} />
+			</MyModal>
+			
 			<hr style={{margin:"10px 0"}}/>
 			<PostFilter 
 				filter={filter} 
