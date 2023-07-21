@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios"
 import './styles/app.css'
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -8,6 +7,7 @@ import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 
 import { usePosts } from "./hooks/usePosts";
+import PostService from "./API/PostService";
 function App() {
 
 	// Массив постов
@@ -26,9 +26,8 @@ function App() {
 	 * Получение постов с сервера
 	 */
 	const  fetchPosts = async () =>{
-		const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
-		setPosts(response.data)
-		
+		const posts = await PostService.getAll();
+		setPosts(posts)
 	}
 	/**
 	 * Добавление поста
