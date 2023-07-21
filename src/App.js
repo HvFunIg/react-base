@@ -8,6 +8,7 @@ import MyButton from "./components/UI/button/MyButton";
 
 import { usePosts } from "./hooks/usePosts";
 import PostService from "./API/PostService";
+import Loader from "./components/UI/loader/Loader";
 function App() {
 
 	// Массив постов
@@ -22,12 +23,16 @@ function App() {
 	// Видимость модального окна
 	const [modal,setModal] = useState(false);
 
+	// Индикатор загрузки
+	const [isPostsLoading, setIsPostsLoading] = useState(false)
 	/** 
 	 * Получение постов с сервера
 	 */
 	const  fetchPosts = async () =>{
+		setIsPostsLoading(true);
 		const posts = await PostService.getAll();
-		setPosts(posts)
+		setPosts(posts);
+		setIsPostsLoading(false);
 	}
 	/**
 	 * Добавление поста
@@ -65,7 +70,11 @@ function App() {
 				filter={filter} 
 				setFilter={setFilter}
 			/>
-			<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
+			{ isPostsLoading 
+				? <div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
+				:	<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
+			}
+			
 		</div>
 	); 
 }

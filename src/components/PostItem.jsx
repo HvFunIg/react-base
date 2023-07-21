@@ -8,8 +8,7 @@ import MyButton from "./UI/button/MyButton";
  * @param {*} body - описание 
  * @returns 
  */
-const PostItem = ( props) => {
-
+const PostItem = (props) => {
   return (
     <div className = "post">
         <div className = "post__content">

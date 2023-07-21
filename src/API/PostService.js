@@ -1,5 +1,8 @@
 import axios from "axios"
 
+/**
+ * API для работы с запросами
+ */
 export default class PostService {
     static async getAll(){
         try {
