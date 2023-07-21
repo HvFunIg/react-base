@@ -9,6 +9,7 @@ import MyButton from "./components/UI/button/MyButton";
 import { usePosts } from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/loader/Loader";
+import { useFetching } from "./hooks/useFetching";
 function App() {
 
 	// Массив постов
@@ -18,22 +19,22 @@ function App() {
 	const [filter,setFilter] = useState({sort:'',query:''});
 
 	// Массив постов после поиска и фильтрации
+	// Через кастомный хук
 	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query )
 	
 	// Видимость модального окна
 	const [modal,setModal] = useState(false);
 
-	// Индикатор загрузки
-	const [isPostsLoading, setIsPostsLoading] = useState(false)
-	/** 
-	 * Получение постов с сервера
+	/**  
+	 * Получение постов с сервера 
+	 * через кастомный хук 
 	 */
-	const  fetchPosts = async () =>{
-		setIsPostsLoading(true);
+	const [fetchPosts,isPostsLoading,postError] = useFetching(async () =>{
 		const posts = await PostService.getAll();
 		setPosts(posts);
-		setIsPostsLoading(false);
-	}
+	})
+	
+	
 	/**
 	 * Добавление поста
 	 */
@@ -70,6 +71,9 @@ function App() {
 				filter={filter} 
 				setFilter={setFilter}
 			/>
+			{postError &&
+				<h1> Произошла ошибка {postError} </h1>
+			}
 			{ isPostsLoading 
 				? <div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
 				:	<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
