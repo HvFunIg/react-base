@@ -5,6 +5,7 @@
 
 Сторонние библиотеки:
 - React Transition Group для анимаций
+- Axios для запросов
 
 Используемые хуки:
 - useState

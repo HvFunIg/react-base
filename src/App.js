@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-
+import React, {useEffect, useState} from "react";
+import axios from "axios"
 import './styles/app.css'
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -22,6 +22,14 @@ function App() {
 	// Видимость модального окна
 	const [modal,setModal] = useState(false);
 
+	/** 
+	 * Получение постов с сервера
+	 */
+	const  fetchPosts = async () =>{
+		const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
+		setPosts(response.data)
+		
+	}
 	/**
 	 * Добавление поста
 	 */
@@ -37,6 +45,9 @@ function App() {
 		setPosts(posts.filter (p => p.id !== post.id))
 	}
 
+	useEffect(()=>{
+		fetchPosts();
+	},[])
 
 	return (
 		<div className="App">
