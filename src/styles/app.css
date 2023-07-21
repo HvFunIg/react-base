@@ -39,3 +39,27 @@
     transform:translateX(-350px);
     transition: all 300ms ease-in;
 }
+
+.page__wrapper{
+    display:flex; 
+    margin-top:30px
+}
+.page__btn{
+    width:30px;
+    border-radius:5px;
+    box-sizing: border-box;
+    margin: 4px;
+    border: 1px solid black;
+    text-align: center;
+    color: teal;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+.page__btn:hover{
+    color:white;
+    background-color: teal;
+}
+.page__current{
+    font-weight: 700;
+    border-width: 2px;
+}

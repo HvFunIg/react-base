@@ -9,10 +9,14 @@ export const useFetching = (callback) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const fetching = async () =>{
+    /**
+     * 
+     * @param  {...any} args - limit и page из callback
+     */
+    const fetching = async (...args) =>{        
         try{
             setIsLoading(true);
-            await callback();
+            await callback(...args);
         }
         catch (e){
             setError(e.message)

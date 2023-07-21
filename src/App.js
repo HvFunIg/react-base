@@ -5,11 +5,15 @@ import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
+import Loader from "./components/UI/loader/Loader";
 
 import { usePosts } from "./hooks/usePosts";
-import PostService from "./API/PostService";
-import Loader from "./components/UI/loader/Loader";
 import { useFetching } from "./hooks/useFetching";
+
+import PostService from "./API/PostService";
+
+import {getPageCount, getPagesArray} from "./utils/pages"
+import Pagination from "./components/UI/pagination/Pagination";
 function App() {
 
 	// Массив постов
@@ -20,21 +24,35 @@ function App() {
 
 	// Массив постов после поиска и фильтрации
 	// Через кастомный хук
-	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query )
+	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 	
 	// Видимость модального окна
 	const [modal,setModal] = useState(false);
+
+	// Общее количество постов
+	const [totalPages, setTotalPages] = useState(0);
+
+	// Количество постов, получаемых с сервера
+	const [limit, setLimit] = useState(10);
+
+	// Индекс для пагинации
+	const [page, setPage] = useState(1);
 
 	/**  
 	 * Получение постов с сервера 
 	 * через кастомный хук 
 	 */
-	const [fetchPosts,isPostsLoading,postError] = useFetching(async () =>{
-		const posts = await PostService.getAll();
-		setPosts(posts);
+	const [fetchPosts,isPostsLoading,postError] = useFetching(async (limit,page) =>{
+		const response = await PostService.getAll(limit,page);
+		setPosts(response.data);
+		const totalCount = response.headers['x-total-count']
+		setTotalPages(getPageCount(totalCount, limit))
 	})
 	
-	
+	const changePage = (page) =>{
+		setPage(page);
+		fetchPosts(limit,page)
+	}
 	/**
 	 * Добавление поста
 	 */
@@ -51,8 +69,10 @@ function App() {
 	}
 
 	useEffect(()=>{
-		fetchPosts();
+		fetchPosts(limit,page);
 	},[])
+
+	
 
 	return (
 		<div className="App">
@@ -78,7 +98,11 @@ function App() {
 				? <div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
 				:	<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
 			}
-			
+			<Pagination
+				page={page}
+				changePage={changePage}
+				totalPages={totalPages}
+			/>
 		</div>
 	); 
 }
