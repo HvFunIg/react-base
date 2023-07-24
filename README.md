@@ -21,6 +21,8 @@
 - Кастомные хуки;
 - Создание API;
 - Использование localStorage;
+- Использование intersectionObserver
+
 ## Запуск проекта
 
 ### `npm start`

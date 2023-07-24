@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import '../styles/app.css'
 import PostList from "../components/PostList";
 import PostForm from "../components/PostForm";
@@ -14,6 +14,8 @@ import PostService from "../API/PostService";
 
 import {getPageCount, getPagesArray} from "../utils/pages"
 import Pagination from "../components/UI/pagination/Pagination";
+import { useObserver } from "../hooks/useObserver";
+import MySelect from "../components/UI/select/MySelect";
 function Posts() {
 
 	// Массив постов
@@ -38,20 +40,21 @@ function Posts() {
 	// Индекс для пагинации
 	const [page, setPage] = useState(1);
 
+	// Последний DOM-элемент в списке
+	const lastElement = useRef()
 	/**  
 	 * Получение постов с сервера 
 	 * через кастомный хук 
 	 */
 	const [fetchPosts,isPostsLoading,postError] = useFetching(async (limit,page) =>{
 		const response = await PostService.getAll(limit,page);
-		setPosts(response.data);
+		setPosts([...posts, ...response.data]);
 		const totalCount = response.headers['x-total-count']
 		setTotalPages(getPageCount(totalCount, limit))
 	})
 	
 	const changePage = (page) =>{
 		setPage(page);
-		fetchPosts(limit,page)
 	}
 	/**
 	 * Добавление поста
@@ -68,9 +71,18 @@ function Posts() {
 		setPosts(posts.filter (p => p.id !== post.id))
 	}
 
+	const changeLimit = (limit) =>{
+		setLimit(limit); 
+		if (!limit)
+			setPage(1)
+	}
+	useObserver(lastElement, page < totalPages, isPostsLoading, ()=>{
+		setPage(page + 1)
+	})
+	// Загрузка постов при монтировании
 	useEffect(()=>{
 		fetchPosts(limit,page);
-	},[])
+	},[page,limit])
 
 	
 
@@ -91,12 +103,24 @@ function Posts() {
 				filter={filter} 
 				setFilter={setFilter}
 			/>
+			<MySelect
+				value={limit}
+				onChange={value=>changeLimit(value)}
+				defaultValue={"Количество элементов на странице"}
+				options={[
+					{value:5,name:'5'},
+					{value:10,name:'10'},
+					{value:25,name:'25'},
+					{value:"-1",name:'Показать'},
+				]}
+			/>
 			{postError &&
 				<h1> Произошла ошибка {postError} </h1>
 			}
-			{ isPostsLoading 
-				? <div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
-				:	<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
+			<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
+			<div ref={lastElement} style={{height:20, background:"green"}}></div>
+			{ isPostsLoading &&
+				<div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
 			}
 			<Pagination
 				page={page}
