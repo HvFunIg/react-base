@@ -6,7 +6,7 @@
 Сторонние библиотеки:
 - React Transition Group для анимаций;
 - Axios для запросов;
-- React Router для многостраничности;
+- React Router (v6) для многостраничности;
 
 Используемые хуки:
 - useState;
