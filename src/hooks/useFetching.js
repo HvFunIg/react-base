@@ -22,7 +22,6 @@ export const useFetching = (callback) => {
             setError(e.message)
         } finally{
             setIsLoading(false);
-
         }
     }
     return [fetching,isLoading,error]

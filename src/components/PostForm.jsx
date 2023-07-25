@@ -1,14 +1,16 @@
 import React, {useState} from "react";
+
 import MyButton from "./UI/button/MyButton";
 import MyInput from "./UI/input/MyInput";
 
 /**
- * Форма
+ * Форма 
+ * @param {Function} createPost - коллбек для создания поста
+ * @returns 
  */
-const PostForm = ({create}) => {
+const PostForm = ({createPost}) => {
 	//Данные из полей ввода
 	const [post,setPost] = useState({title:'',body:''})
-
     
 	/**
 	 * Создание поста
@@ -18,11 +20,10 @@ const PostForm = ({create}) => {
         const newPost = {
             ...post,id:Date.now()
         }
-        create(newPost)
+        createPost(newPost)
 		//Очистка ввода
 		setPost({title:'',body:''});
 	}
-
 
     return (
         <form action="">

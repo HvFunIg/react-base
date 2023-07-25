@@ -1,11 +1,13 @@
 import React from "react";
+import {TransitionGroup,CSSTransition} from "react-transition-group" //Для анимаций
+
 import PostItem from "./PostItem";
-import {TransitionGroup,CSSTransition} from "react-transition-group"
 
 /**
- * Список постов
- * @param {*} posts - список постов 
- * @param {*} title - заголовок 
+ * Список постов. 
+ * @param {Array} posts - список постов 
+ * @param {String} title - заголовок 
+ * @param {Function} remove - коллбек для удаления поста
  */
 const PostList = ({posts, title,remove}) => {
 	if (!posts.length){
@@ -17,14 +19,14 @@ const PostList = ({posts, title,remove}) => {
 		<div >
 			<h1 style={{textAlign:'center'}}> {title}</h1>
 			<TransitionGroup>
-			{posts.map((post,index) => 
-				<CSSTransition
-					key={post.id}
-					timeout={500}
-					classNames="post"
-				>
-						<PostItem remove={remove} number={index+1} post={post} />
-					</CSSTransition>
+				{posts.map((post,index) => 
+					<CSSTransition
+						key={post.id}
+						timeout={500}
+						classNames="post"
+					>
+							<PostItem remove={remove} number={index+1} post={post} />
+						</CSSTransition>
 				)}
 			</TransitionGroup>
 		</div>

@@ -9,6 +9,7 @@
     gap: 10px;
     background: linear-gradient(253.42deg, #000000 -24.55%, #6C6B6B 127.23%);
     box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.43);
+    position: sticky;
 }
 
 .navbar__links{

@@ -1,21 +1,24 @@
 import React, {useEffect, useRef, useState} from "react";
-import '../styles/app.css'
+
+import {usePosts} from "../hooks/usePosts";
+import {useFetching} from "../hooks/useFetching";
+import {useObserver} from "../hooks/useObserver";
+
+import {getPageCount, getPagesArray} from "../utils/pages"
+
 import PostList from "../components/PostList";
 import PostForm from "../components/PostForm";
 import PostFilter from "../components/PostFilter";
+
 import MyModal from "../components/UI/modal/MyModal";
 import MyButton from "../components/UI/button/MyButton";
 import Loader from "../components/UI/loader/Loader";
-
-import { usePosts } from "../hooks/usePosts";
-import { useFetching } from "../hooks/useFetching";
+import MySelect from "../components/UI/select/MySelect";
 
 import PostService from "../API/PostService";
 
-import {getPageCount, getPagesArray} from "../utils/pages"
-import Pagination from "../components/UI/pagination/Pagination";
-import { useObserver } from "../hooks/useObserver";
-import MySelect from "../components/UI/select/MySelect";
+import '../styles/app.css'
+
 function Posts() {
 
 	// Массив постов
@@ -41,7 +44,8 @@ function Posts() {
 	const [page, setPage] = useState(1);
 
 	// Последний DOM-элемент в списке
-	const lastElement = useRef()
+	const lastElement = useRef();
+
 	/**  
 	 * Получение постов с сервера 
 	 * через кастомный хук 
@@ -53,11 +57,9 @@ function Posts() {
 		setTotalPages(getPageCount(totalCount, limit))
 	})
 	
-	const changePage = (page) =>{
-		setPage(page);
-	}
 	/**
-	 * Добавление поста
+	 * Создание поста
+	 * @param {Object} newPost - Объект с инфо о посте
 	 */
 	const createPost = (newPost) =>{
 		setPosts([...posts, newPost])
@@ -66,19 +68,27 @@ function Posts() {
 
 	/**
 	 * Удаление поста
+	 * @param {Object} post - Объект с инфо о посте
 	 */
 	const removePost = (post) =>{
 		setPosts(posts.filter (p => p.id !== post.id))
 	}
 
+	/**
+	 * Проверка на "показать все посты". Если параметр указан как -1, то установить page = 1
+	 * @param {Number} limit 
+	 */
 	const changeLimit = (limit) =>{
 		setLimit(limit); 
 		if (!limit)
 			setPage(1)
 	}
+	
+	// Загрузка постов при скролле
 	useObserver(lastElement, page < totalPages, isPostsLoading, ()=>{
 		setPage(page + 1)
 	})
+
 	// Загрузка постов при монтировании
 	useEffect(()=>{
 		fetchPosts(limit,page);
@@ -95,7 +105,7 @@ function Posts() {
 				visible={modal}	
 				setVisible={setModal}
 			>
-				<PostForm create={createPost} />
+				<PostForm createPost={createPost} />
 			</MyModal>
 			
 			<hr style={{margin:"10px 0"}}/>
@@ -125,11 +135,7 @@ function Posts() {
 			{ isPostsLoading &&
 				<div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
 			}
-			<Pagination
-				page={page}
-				changePage={changePage}
-				totalPages={totalPages}
-			/>
+		
 		</div>
 	); 
 }
