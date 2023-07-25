@@ -88,7 +88,7 @@ function Posts() {
 
 	return (
 		<div className="App">
-			<MyButton style={{marginTop:"30px"}} onClick={()=>setModal(true)}>
+			<MyButton colored={true} style={{marginTop:"30px"}} onClick={()=>setModal(true)}>
 				Создать пост
 			</MyButton>
 			<MyModal 
@@ -103,22 +103,25 @@ function Posts() {
 				filter={filter} 
 				setFilter={setFilter}
 			/>
-			<MySelect
-				value={limit}
-				onChange={value=>changeLimit(value)}
-				defaultValue={"Количество элементов на странице"}
-				options={[
-					{value:5,name:'5'},
-					{value:10,name:'10'},
-					{value:25,name:'25'},
-					{value:"-1",name:'Показать'},
-				]}
-			/>
+			<div style={{display:"flex", width:300}}>
+				<p>Количество подгружаемых за раз постов:</p>
+				<MySelect
+					value={limit}
+					onChange={value=>changeLimit(value)}
+					defaultValue={"Количество подгружаемых за раз постов"}
+					options={[
+						{value:5,name:'5'},
+						{value:10,name:'10'},
+						{value:25,name:'25'},
+						{value:"-1",name:'Показать'},
+					]}
+				/>
+			</div>
 			{postError &&
 				<h1> Произошла ошибка {postError} </h1>
 			}
 			<PostList remove={removePost}  posts={sortedAndSearchedPosts} title="Список постов про JS"/>
-			<div ref={lastElement} style={{height:20, background:"green"}}></div>
+			<div ref={lastElement} ></div>
 			{ isPostsLoading &&
 				<div style={{display:"flex", justifyContent:"center", marginTop:"50px"}}><Loader/> </div>
 			}

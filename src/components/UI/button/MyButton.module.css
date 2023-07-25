@@ -1,9 +1,22 @@
 .myBtn {
     padding: 5px 10px;
     width:100px;
-    border: 1px olivedrab solid;
-    border-radius: 20px;
+    border: 1px rgb(255, 255, 255) solid;
+    border-radius: 10px;
     background: transparent;
-    color: teal;
+    color: rgb(255, 255, 255);
     cursor:pointer;
+    transition: background 0.2s linear;
+}
+.myBtn:hover{
+    background: black;
+}
+.myBtn__black{
+    color: rgb(0, 0, 0);
+    border: 1px rgb(0, 0, 0) solid;
+}
+
+.myBtn__black:hover{
+    border: 1px rgb(255, 255, 255) solid;
+    color: rgb(255, 255, 255);
 }

@@ -1,0 +1,47 @@
+.navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100vw;
+    height: 40px;
+    align-items: center;
+    padding: 0px 100px;
+    gap: 10px;
+    background: linear-gradient(253.42deg, #000000 -24.55%, #6C6B6B 127.23%);
+    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.43);
+}
+
+.navbar__links{
+    margin-left: auto;
+}
+
+.link{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition-duration: 0.4s;
+    position: relative;
+    margin: 0 10px;
+}
+
+.link:hover:after {
+    display: block;
+    width: 100%;
+}
+
+.link:after {
+    content: "";
+    width: 0px;
+    height: 2px;
+    background-color: #ffffff;
+
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    transition: width 0.2s linear;
+}
